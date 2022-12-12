@@ -1,0 +1,48 @@
+        create database insuranceData;
+        use insuranceData;
+
+        create table users(
+                user_id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                nick text NOT NULL,
+                login VARCHAR (64) NOT NULL UNIQUE,
+                password text NOT NULL,
+                usersinsert_time timestamp NOT NULL DEFAULT now()
+        );
+
+        create table vehicles(
+                vehicle_id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                login VARCHAR (64) NOT NULL,
+                user_id BIGINT NOT NULL,
+                brand text NOT NULL,
+                model text NOT NULL,
+                CONSTRAINT FK_VehicleLogin FOREIGN KEY (login) REFERENCES users(login),
+                CONSTRAINT FK_VehicleUserId FOREIGN KEY (user_id) REFERENCES users(user_id),
+                insert_time timestamp NOT NULL DEFAULT now()
+        );
+
+        CREATE TABLE insurance_offers (
+                offer_id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                vehicle_id bigint NOT NULL,
+                user_id BIGINT NOT NULL,
+                CONSTRAINT FK_VehicleOffer FOREIGN KEY (vehicle_id) REFERENCES vehicles (vehicle_id),
+                CONSTRAINT FK_OfferUserId FOREIGN KEY (user_id) REFERENCES users(user_id),
+                insurer text NOT NULL,
+                price float NOT NULL,
+                insert_time timestamp NOT NULL DEFAULT now()
+);
+
+        INSERT INTO users (nick, login, password) VALUES ('jan101', 'jan101login', 'haslojana');
+        INSERT INTO users (nick, login, password) VALUES ('krzysztof2000', 'loginkrzysztofa', 'kaslokrzycha');
+        INSERT INTO users (nick, login, password) VALUES ('tadeusz222', 'logintadka', 'haslotadka');
+
+        SET FOREIGN_KEY_CHECKS=0;
+
+        INSERT INTO vehicles (login, user_id, brand, model) VALUES ('jan101login','1','subaru','impreza');
+        INSERT INTO vehicles (login, user_id, brand, model) VALUES ('krzysztof2000','2','fiat','punto');
+        INSERT INTO vehicles (login, user_id, brand, model) VALUES ('krzysztof2000','2','mazda','mx5');
+        INSERT INTO vehicles (login, user_id, brand, model) VALUES ('tadeusz222','3','ford','mondeo');
+
+        INSERT INTO insurance_offers (vehicle_id, user_id, insurer, price) VALUES ('1', '1', 'PZU', '5000');
+        INSERT INTO insurance_offers (vehicle_id, user_id, insurer, price) VALUES ('2', '2', 'Warta', '15000');
+        INSERT INTO insurance_offers (vehicle_id, user_id, insurer, price) VALUES ('3', '2', 'Warta', '50000');
+        INSERT INTO insurance_offers (vehicle_id, user_id, insurer, price) VALUES ('4', '3', 'PZU', '35000');
